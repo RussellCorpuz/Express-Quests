@@ -44,3 +44,7 @@ app.put("/api/movies/:id", movieHandlers.updateMovie);
 
 app.delete("/api/movies/:id", movieHandlers.deleteMovie);
 
+const { validateMovie, validateUser } = require("./validators.js");
+
+app.post("/api/movies", validateMovie, movieHandlers.postMovie);
+app.post("/api/users", validateUser, userHandlers.postUser);

@@ -36,7 +36,7 @@ const updateUser = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send("Error editing the mser");
+      res.status(500).send("Error editing the user");
     });
 };
 
