@@ -59,8 +59,54 @@ const postUser = (req, res) => {
 
 
 const getUsers = (req, res) => {
+  const initialSql = "select * from users";
+  const where = [];
+
+  if (req.query.language != null) {
+    where.push({
+      column: "language",
+      value: req.query.language,
+      operator: "=",
+    });
+  }
+  if (req.query.city != null) {
+    where.push({
+      column: "city",
+      value: req.query.city,
+      operator: "=",
+    });
+  }
+  if (req.query.firstname != null) {
+    where.push({
+      column: "firstname",
+      value: req.query.firstname,
+      operator: "=",
+    });
+  }
+  if (req.query.lastname != null) {
+    where.push({
+      column: "lastname",
+      value: req.query.lastname,
+      operator: "=",
+    });
+  }
+  if (req.query.email != null) {
+    where.push({
+      column: "email",
+      value: req.query.email,
+      operator: "=",
+    });
+  }
+
   database
-    .query("select * from users")
+    .query(
+      where.reduce(
+        (sql, { column, operator }, index) =>
+          `${sql} ${index === 0 ? "where" : "and"} ${column} ${operator} ?`,
+        initialSql
+      ),
+      where.map(({ value }) => value)
+    )
     .then(([users]) => {
       res.json(users);
     })
@@ -69,6 +115,7 @@ const getUsers = (req, res) => {
       res.status(500).send("Error retrieving data from database");
     });
 };
+
 
 const getUserById = (req, res) => {
   const id = parseInt(req.params.id);
